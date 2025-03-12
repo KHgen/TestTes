@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <style>
+        body{
+            background-image: url('photo_2025-02-13_18-05-11.jpg');
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+    background-size: cover; /* Scales the image to cover the entire background */
+    background-position: center; /* Centers the image */
+    background-attachment: fixed; /* Keeps the background fixed during scrolling (optional) */
+        }
+        .container {
+            width: 90%;
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            color: aqua;
+            font-size: 20px;
+            text-align: center;
+            background-color: #000;
+            border: 5px solid aqua;
+            border-radius: 10px;
+            animation: changeColor 10s linear infinite;
+        }
+        .contentLabel {
+            text-shadow: 2px 2px 2px white;
+        }
+        input {
+            width: 100%;
+            height: 30px;
+            border-radius: 15px;
+            text-indent: 10px;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: white;
+            color: aqua;
+            width: 100px;
+            height: 40px;
+            font-size: larger;
+            text-shadow: 4px 4px 4px black;
+            border: 1px solid black;
+            border-radius: 15px;
+            box-shadow: 4px 4px 4px aqua;
+            transition: box-shadow 2s, background-color 2s, color 2s;
+        }
+        @keyframes changeColor {
+  0% { border-color: crimson; }
+  25% { border-color: aqua; }
+  50% { border-color: chartreuse; }
+  75% { border-color: gold; }
+  100% { border-color: crimson; }
+}
+button:hover {
+    background-color: aqua;
+    color: black;
+    box-shadow: 6px 6px 12px white;
+}
+        
+    </style>
+</head>
+<body bgcolor="black">
+    <main>
+        <form action="Home page.html" class="container" method="post">
+            <label for="Fname" class="contentLabel">First Name:</label>
+            <input type="text" id="Fname" required>
+            <label for="Lname" class="contentLabel">Last Name:</label>
+            <input type="text" id="Lname">
+            <label for="Email" class="contentLabel">Email:</label>
+            <input type="email" id="Email" required>
+            <label for="UserName" class="contentLabel">User Name:</label>
+            <input type="text" id="UserName" required>
+            <label for="psw" class="contentLabel">Password:</label>
+            <input type="password" id="psw" required>
+            <br><br>
+            <button type="submit">Login</button>
+        </form>
+    </main>
+</body>
+</html>

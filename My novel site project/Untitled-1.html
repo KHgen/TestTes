@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hand Tracker with Beep</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        video {
+            border: 2px solid #ccc;
+            width: 640px;
+            height: 480px;
+        }
+        .status {
+            margin-top: 20px;
+            font-size: 24px;
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+        .optimal-distance {
+            color: green;
+        }
+        .beeping-distance {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hand Tracker with Beep</h1>
+    <video id="video" autoplay></video>
+    <div class="status" id="status"></div>
+    <div class="button-container">
+        <button id="stopButton">Stop</button>
+    </div>
+    <audio id="beepSound" src="beep.mp3"></audio>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/handtrackjs"></script>
+    <script>
+        const video = document.getElementById('video');
+        const status = document.getElementById('status');
+        const beepSound = document.getElementById('beepSound');
+        const stopButton = document.getElementById('stopButton');
+        let model;
+        let isBeeping = false;
+
+        // Load the hand tracking model
+        handTrack.load().then(lmodel => {
+            model = lmodel;
+            startVideo();
+        });
+
+        // Start the video
+        function startVideo() {
+            handTrack.startVideo(video).then(status => {
+                if (status) {
+                    runDetection();
+                } else {
+                    console.log("Please enable video");
+                }
+            });
+        }
+
+        // Run hand detection
+        function runDetection() {
+            model.detect(video).then(predictions => {
+                model.renderPredictions(predictions, video, video.getContext('2d'), video);
+
+                if (predictions.length > 0) {
+                    const hand = predictions[0].bbox;
+                    const distance = hand[2];
+
+                    if (distance > 200 && distance < 300) {
+                        status.textContent = "Optimal Distance";
+                        status.className = "status optimal-distance";
+                        stopBeeping();
+                    } else if (distance >= 300) {
+                        status.textContent = "Beep Beep Beep";
+                        status.className = "status beeping-distance";
+                        startBeeping();
+                    } else {
+                        status.textContent = "Adjust Distance";
+                        status.className = "status";
+                        stopBeeping();
+                    }
+                } else {
+                    status.textContent = "No Hand Detected";
+                    status.className = "status";
+                    stopBeeping();
+                }
+
+                requestAnimationFrame(runDetection);
+            });
+        }
+
+        // Start beeping sound
+        function startBeeping() {
+            if (!isBeeping) {
+                beepSound.play();
+                isBeeping = true;
+            }
+        }
+
+        // Stop beeping sound
+        function stopBeeping() {
+            if (isBeeping) {
+                beepSound.pause();
+                beepSound.currentTime = 0;
+                isBeeping = false;
+            }
+        }
+
+        // Stop the detection and video
+        stopButton.addEventListener('click', () => {
+            handTrack.stopVideo(video);
+            status.textContent = "Detection Stopped";
+            status.className = "status";
+            stopBeeping();
+        });
+    </script>
+</body>
+</html>
